@@ -311,8 +311,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showLoading("Uploading and analysing...");
  
         try {
-            // FIXED: Use relative URL instead of hardcoded domain
-            const response = await fetch("/upload", {
+            const response = await fetch("https://basketball-defence-analyser.onrender.com/upload", {
                 method: "POST",
                 body: formData,
             });
@@ -356,8 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showLoading(`Analysing segment (${formatTime(start_time)} – ${formatTime(end_time)})…`);
  
         try {
-            // FIXED: Use relative URL instead of hardcoded domain
-            const response = await fetch("/analyse-segment", {
+            const response = await fetch("https://basketball-defence-analyser.onrender.com/analyse-segment", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
