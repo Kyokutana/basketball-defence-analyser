@@ -1,14 +1,14 @@
 from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import os
 import cv2
 from datetime import datetime
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "https://basketball-defence-analyser-1.onrender.com"}})
 
-# Save uploads outside backend folder
+
 UPLOAD_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "uploads"))
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -186,6 +186,7 @@ def home():
     return "Backend is running successfully!"
 
 @app.route("/upload", methods=["POST"])
+@cross_origin(origin="https://basketball-defence-analyser-1.onrender.com")
 def upload_video():
     if "video" not in request.files:
         return jsonify({"error": "No file part named 'video' found"}), 400
@@ -217,6 +218,7 @@ def upload_video():
         return jsonify({"error": str(e)}), 500
 
 @app.route("/analyze-segment", methods=["POST"])
+@cross_origin(origin="https://basketball-defence-analyser-1.onrender.com")
 def analyze_segment():
     data = request.get_json()
 
