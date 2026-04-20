@@ -7,10 +7,10 @@ from werkzeug.utils import secure_filename
  
 app = Flask(__name__)
  
-# FIXED: Allow all render.com subdomains + localhost for dev
+# Frontend origin only — backend is basketball-defence-analyser.onrender.com
+#                        frontend is basketball-defence-analyser-1.onrender.com
 CORS(app, resources={r"/*": {"origins": [
     "https://basketball-defence-analyser-1.onrender.com",
-    "https://basketball-defence-analyser.onrender.com",
     "http://localhost:5000",
     "http://127.0.0.1:5000",
 ]}})
@@ -102,26 +102,32 @@ def extract_frames_from_segment(video_path: str, start_time: float, end_time: fl
  
  
 def get_preview_frames(frames_dir: str, max_frames: int = 4) -> list[str]:
+    """
+    Return up to max_frames preview image URLs from a frame directory.
+    """
     frame_files = sorted([
         f for f in os.listdir(frames_dir)
         if f.lower().endswith(".jpg")
     ])
-
+ 
     if not frame_files:
         return []
-
+ 
+    # Pick evenly spaced frames
     if len(frame_files) <= max_frames:
         selected = frame_files
     else:
         step = max(1, len(frame_files) // max_frames)
         selected = [frame_files[i] for i in range(0, len(frame_files), step)[:max_frames]]
-
+ 
+    # Build relative path from FRAMES_FOLDER root
     rel_dir = os.path.relpath(frames_dir, FRAMES_FOLDER)
-
+ 
     return [
-        f"/frames/{rel_dir}/{frame}"
+        f"https://basketball-defence-analyser.onrender.com/frames/{rel_dir}/{frame}"
         for frame in selected
     ]
+ 
  
 @app.route("/uploads/<path:filename>")
 def serve_uploaded_video(filename):
@@ -156,8 +162,7 @@ def upload_video():
             "message": "Upload successful",
             "filename": filename,
             "saved_to": save_path,
-            # FIXED: Use relative URL so it works on any subdomain
-            "video_url": f"/uploads/{filename}",
+            "video_url": f"https://basketball-defence-analyser.onrender.com/uploads/{filename}",
         }), 200
  
     except Exception as e:
@@ -274,3 +279,4 @@ def simple_defence_analysis(frames_dir: str, sample_limit: int = 40) -> dict:
  
 if __name__ == "__main__":
     app.run(debug=True)
+ 
