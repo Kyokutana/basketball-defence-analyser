@@ -79,6 +79,7 @@ def extract_frames_from_segment(video_path: str, start_time: float, end_time: fl
  
     start_frame = int(start_time * fps)
     end_frame = int(end_time * fps)
+    end_frame = min(end_frame, int(cap.get(cv2.CAP_PROP_FRAME_COUNT)))
  
     cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
  

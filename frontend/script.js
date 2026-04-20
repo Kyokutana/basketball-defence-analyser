@@ -326,12 +326,32 @@ document.addEventListener("DOMContentLoaded", () => {
             videoPlayer.src = data.video_url;
             videoSection.style.display = "block";
             markerPanel.style.display = "block";
- 
-            resultBox.innerHTML = `
-                <div class="loading-card">
-                    ✔ Video uploaded successfully. Select a segment and click "Analyse Selected Segment".
-                </div>
-            `;
+
+            // Auto-analyse the full video immediately
+            showLoading("Analysing full video...");
+
+            try {
+                const analyseResponse = await fetch("https://basketball-defence-analyser.onrender.com/analyse-segment", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        filename: uploadedFilename,
+                        start_time: 0,
+                        end_time: 9999, // backend will clamp to video length
+                    }),
+                });
+
+                const analyseData = await analyseResponse.json();
+
+                if (!analyseResponse.ok) {
+                    throw new Error(analyseData.error || "Analysis failed.");
+                }
+
+                renderAnalysis(analyseData.analysis, analyseData.preview_frames || []);
+            } catch (analyseError) {
+                console.error(analyseError);
+                showError(analyseError.message);
+            }
         } catch (error) {
             console.error(error);
             showError(error.message);
