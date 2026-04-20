@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basketball Defence Analyser</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-shell">
+        <header class="topbar">
+            <div>
+                <h1>🏀 Basketball Defence Analyser</h1>
+                <p class="subtitle">Upload footage, select a sequence, and generate explainable defensive analysis.</p>
+            </div>
+        </header>
+
+        <section class="upload-panel">
+            <input type="file" id="videoInput" accept="video/*">
+            <button id="uploadBtn">Upload & Analyse</button>
+        </section>
+
+        <main class="dashboard">
+            <section class="left-panel card" id="videoSection" style="display:none;">
+                <h2>Video Review</h2>
+                <video id="videoPlayer" controls width="100%"></video>
+
+                <div class="range-controls">
+                    <div class="time-row">
+                        <label for="startRange"><strong>Start:</strong> <span id="startLabel">00:00</span></label>
+                        <label for="endRange"><strong>End:</strong> <span id="endLabel">00:00</span></label>
+                    </div>
+
+                    <input type="range" id="startRange" min="0" max="0" value="0" step="0.1">
+                    <input type="range" id="endRange" min="0" max="0" value="0" step="0.1">
+
+                    <div class="timeline-visual">
+                        <div class="timeline-bar" id="timelineBar">
+                            <div id="timelineHighlight" class="timeline-highlight"></div>
+                            <div id="leftHandle" class="timeline-handle"></div>
+                            <div id="rightHandle" class="timeline-handle"></div>
+                        </div>
+
+                        <div class="timeline-marker-row" id="timelineMarkerRow"></div>
+
+                        <div class="timeline-labels">
+                            <span id="timelineStart">00:00</span>
+                            <span id="timelineEnd">00:00</span>
+                        </div>
+                    </div>
+
+                    <button id="segmentBtn" class="primary-btn">Analyse Selected Segment</button>
+            </section>
+
+            <section class="right-panel">
+
+                <div id="result"></div>
+
+                <div class="card marker-panel" id="markerPanel" style="display:none;">
+                    <h2>Markers</h2>
+
+                    <div class="marker-controls">
+                        <label for="markerType"><strong>Marker Type:</strong></label>
+                        <select id="markerType">
+                            <option value="marker-blue">General</option>
+                            <option value="marker-green">Good</option>
+                            <option value="marker-red">Problem</option>
+                            <option value="marker-yellow">Review</option>
+                        </select>
+
+                        <button id="addMarkerBtn" type="button">Add Marker</button>
+                        <button id="removeMarkerBtn" type="button">Remove Selected Marker</button>
+                    </div>
+
+                    <div class="marker-notes">
+                        <label for="markerNotes"><strong>Marker Notes:</strong></label>
+                        <textarea id="markerNotes" placeholder="Add coaching notes..."></textarea>
+                        <button id="saveNoteBtn" type="button">Save Note</button>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
