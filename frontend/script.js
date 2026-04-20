@@ -313,7 +313,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showLoading("Uploading and analysing...");
 
         try {
-            const response = await fetch("http://127.0.0.1:5000/upload", {
+            const response = await fetch("https://basketball-defence-analyser.onrender.com/upload", {
                 method: "POST",
                 body: formData
             });
@@ -353,7 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showLoading(`Analysing segment (${formatTime(start_time)} → ${formatTime(end_time)})`);
 
         try {
-            const response = await fetch("http://127.0.0.1:5000/analyze-segment", {
+            const response = await fetch("https://basketball-defence-analyser.onrender.com/analyze-segment", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
