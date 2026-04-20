@@ -201,17 +201,11 @@ def upload_video():
         save_path = os.path.join(UPLOAD_FOLDER, filename)
         file.save(save_path)
 
-        frames_dir, frames_count = extract_frames(save_path, every_n_frames=10)
-        analysis = simple_defence_analysis(frames_dir)
-
         return jsonify({
             "message": "Upload successful",
             "filename": filename,
             "saved_to": save_path,
-            "video_url": f"http://127.0.0.1:5000/uploads/{filename}",
-            "frames_saved_to": frames_dir,
-            "frames_saved_count": frames_count,
-            "analysis": analysis
+            "video_url": f"https://basketball-defence-analyser.onrender.com/uploads/{filename}"
         }), 200
 
     except Exception as e:

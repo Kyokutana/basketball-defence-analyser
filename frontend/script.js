@@ -327,10 +327,13 @@ document.addEventListener("DOMContentLoaded", () => {
             uploadedFilename = data.filename;
             videoPlayer.src = data.video_url;
             videoSection.style.display = "block";
-            markerNotes.value = "";
-            selectedMarkerIndex = null;
+            markerPanel.style.display = "block";
 
-            renderAnalysis(data.analysis, data.preview_frames || []);
+            resultBox.innerHTML = `
+                <div class="loading-card">
+                    ✅ Video uploaded successfully. Select a segment and click "Analyse Selected Segment".
+                </div>
+            `;
         } catch (error) {
             console.error(error);
             showError(error.message);
