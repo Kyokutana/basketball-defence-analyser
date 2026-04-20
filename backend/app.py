@@ -7,10 +7,10 @@ from werkzeug.utils import secure_filename
  
 app = Flask(__name__)
  
-# FIXED: Allow all render.com subdomains + localhost for dev
+# Frontend origin only — backend is basketball-defence-analyser.onrender.com
+#                        frontend is basketball-defence-analyser-1.onrender.com
 CORS(app, resources={r"/*": {"origins": [
     "https://basketball-defence-analyser-1.onrender.com",
-    "https://basketball-defence-analyser.onrender.com",
     "http://localhost:5000",
     "http://127.0.0.1:5000",
 ]}})
@@ -120,11 +120,11 @@ def get_preview_frames(frames_dir: str, max_frames: int = 4) -> list[str]:
         step = max(1, len(frame_files) // max_frames)
         selected = [frame_files[i] for i in range(0, len(frame_files), step)[:max_frames]]
  
-    folder_name = os.path.basename(frames_dir)
-    parent_name = os.path.basename(os.path.dirname(frames_dir))
+    # Build relative path from FRAMES_FOLDER root
+    rel_dir = os.path.relpath(frames_dir, FRAMES_FOLDER)
  
     return [
-        f"/frames/{parent_name}/{folder_name}/{frame}"
+        f"https://basketball-defence-analyser.onrender.com/frames/{rel_dir}/{frame}"
         for frame in selected
     ]
  
@@ -162,8 +162,7 @@ def upload_video():
             "message": "Upload successful",
             "filename": filename,
             "saved_to": save_path,
-            # FIXED: Use relative URL so it works on any subdomain
-            "video_url": f"/uploads/{filename}",
+            "video_url": f"https://basketball-defence-analyser.onrender.com/uploads/{filename}",
         }), 200
  
     except Exception as e:
@@ -280,3 +279,4 @@ def simple_defence_analysis(frames_dir: str, sample_limit: int = 40) -> dict:
  
 if __name__ == "__main__":
     app.run(debug=True)
+ 
