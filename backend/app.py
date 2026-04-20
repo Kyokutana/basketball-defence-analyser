@@ -102,32 +102,26 @@ def extract_frames_from_segment(video_path: str, start_time: float, end_time: fl
  
  
 def get_preview_frames(frames_dir: str, max_frames: int = 4) -> list[str]:
-    """
-    Return up to max_frames preview image URLs from a frame directory.
-    """
     frame_files = sorted([
         f for f in os.listdir(frames_dir)
         if f.lower().endswith(".jpg")
     ])
- 
+
     if not frame_files:
         return []
- 
-    # Pick evenly spaced frames
+
     if len(frame_files) <= max_frames:
         selected = frame_files
     else:
         step = max(1, len(frame_files) // max_frames)
         selected = [frame_files[i] for i in range(0, len(frame_files), step)[:max_frames]]
- 
-    folder_name = os.path.basename(frames_dir)
-    parent_name = os.path.basename(os.path.dirname(frames_dir))
- 
+
+    rel_dir = os.path.relpath(frames_dir, FRAMES_FOLDER)
+
     return [
-        f"/frames/{parent_name}/{folder_name}/{frame}"
+        f"/frames/{rel_dir}/{frame}"
         for frame in selected
     ]
- 
  
 @app.route("/uploads/<path:filename>")
 def serve_uploaded_video(filename):
